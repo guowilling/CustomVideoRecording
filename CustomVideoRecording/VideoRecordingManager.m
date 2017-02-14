@@ -327,13 +327,13 @@
 
 - (void)switchCameraAnimation {
     
-    CATransition *changeAnimation = [CATransition animation];
-    changeAnimation.delegate = self;
-    changeAnimation.duration = 0.5;
-    changeAnimation.type = @"oglFlip";
-    changeAnimation.subtype = kCATransitionFromRight;
-    changeAnimation.timingFunction = UIViewAnimationCurveEaseInOut;
-    [self.previewLayer addAnimation:changeAnimation forKey:@"changeAnimation"];
+    CATransition *filpAnimation = [CATransition animation];
+    //changeAnimation.delegate = self;
+    filpAnimation.duration = 0.5;
+    filpAnimation.type = @"oglFlip";
+    filpAnimation.subtype = kCATransitionFromRight;
+    filpAnimation.timingFunction = UIViewAnimationCurveEaseInOut;
+    [self.previewLayer addAnimation:filpAnimation forKey:@"filpAnimation"];
 }
 
 - (void)switchCameraInputDeviceToFront {
