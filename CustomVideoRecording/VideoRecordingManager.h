@@ -44,4 +44,6 @@
 - (void)switchCameraInputDeviceToFront;
 - (void)swithCameraInputDeviceToBack;
 
+- (void)saveCurrentRecordingVideo;
+
 @end

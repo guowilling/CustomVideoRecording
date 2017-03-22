@@ -6,13 +6,14 @@
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
-#import <AVFoundation/AVFoundation.h>
-#import <MediaPlayer/MediaPlayer.h>
-#import <AVKit/AVKit.h>
 #import "VideoRecordingController.h"
 #import "VideoRecordingManager.h"
 #import "VideoRecordingWriter.h"
 #import "VideoRecordingProgress.h"
+#import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <AVKit/AVKit.h>
+#import <Photos/Photos.h>
 
 @interface VideoRecordingController () <VideoRecordingManagerDelegate>
 
@@ -22,9 +23,10 @@
 @property (nonatomic, weak) UIButton *flashBtn;
 @property (nonatomic, weak) UIButton *switchCameraBtn;
 
-@property (nonatomic, weak) UIView    *bottomToolBar;
-@property (nonatomic, weak) UIButton  *startRecordingBtn;
-@property (nonatomic, weak) UIButton  *playVideoBtn;
+@property (nonatomic, weak) UIView   *bottomToolBar;
+@property (nonatomic, weak) UIButton *startRecordingBtn;
+@property (nonatomic, weak) UIButton *playVideoBtn;
+@property (nonatomic, weak) UIButton *saveVideoBtn;
 
 @property (nonatomic, weak) VideoRecordingProgress *recordingProgress;
 
@@ -39,7 +41,6 @@
     if (!_recordingManager) {
         _recordingManager = [[VideoRecordingManager alloc] init];
         _recordingManager.maxRecordingTime = 15.0;
-        _recordingManager.autoSaveVideo = YES;
         _recordingManager.delegate = self;
     }
     return _recordingManager;
@@ -90,8 +91,8 @@
     
     UIButton *flashBtn = [[UIButton alloc] init];
     flashBtn.frame = CGRectMake(0, margin, btnWH, btnWH);
-    [flashBtn setImage:[UIImage imageNamed:@"camera_flash_off"] forState:UIControlStateNormal];
-    [flashBtn setImage:[UIImage imageNamed:@"camera_flash_on"] forState:UIControlStateSelected];
+    [flashBtn setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
+    [flashBtn setImage:[UIImage imageNamed:@"flash_on"] forState:UIControlStateSelected];
     [flashBtn addTarget:self action:@selector(flashBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     [topToolBar addSubview:flashBtn];
     _flashBtn = flashBtn;
@@ -136,6 +137,14 @@
     [_bottomToolBar addSubview:playVideoBtn];
     _playVideoBtn = playVideoBtn;
     _playVideoBtn.hidden = YES;
+    
+    UIButton *saveVideoBtn = [[UIButton alloc] init];
+    saveVideoBtn.frame = CGRectMake(_bottomToolBar.frame.size.width * 0.75 - 25, (_bottomToolBar.frame.size.height - 50) * 0.5, 50, 50);
+    [saveVideoBtn setImage:[UIImage imageNamed:@"save_video"] forState:UIControlStateNormal];
+    [saveVideoBtn addTarget:self action:@selector(saveVideoBtnBtnAction) forControlEvents:UIControlEventTouchUpInside];
+    [_bottomToolBar addSubview:saveVideoBtn];
+    _saveVideoBtn = saveVideoBtn;
+    _saveVideoBtn.hidden = YES;
 }
 
 #pragma mark - Actions
@@ -169,6 +178,8 @@
 - (void)startRecordingBtnAction:(UIButton *)sender {
     
     sender.hidden = YES;
+    _playVideoBtn.hidden = YES;
+    _saveVideoBtn.hidden = YES;
     _recordingProgress.hidden = NO;
     
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
@@ -186,11 +197,17 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
+- (void)saveVideoBtnBtnAction {
+    
+    [self.recordingManager saveCurrentRecordingVideo];
+}
+
 - (void)stopRecording {
     
     _startRecordingBtn.hidden = NO;
     _recordingProgress.hidden = YES;
     _playVideoBtn.hidden = NO;
+    _saveVideoBtn.hidden = NO;
     
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{

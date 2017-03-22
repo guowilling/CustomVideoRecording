@@ -6,9 +6,9 @@
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
-#import <Photos/Photos.h>
 #import "VideoRecordingManager.h"
 #import "VideoRecordingWriter.h"
+#import <Photos/Photos.h>
 
 @interface VideoRecordingManager () <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, CAAnimationDelegate>
 {
@@ -46,6 +46,8 @@
 @property (nonatomic, assign) BOOL isRecording;
 
 @property (nonatomic, copy) NSString *cacheDirectoryPath;
+
+@property (nonatomic, strong) NSURL *videoFileURL;
 
 @end
 
@@ -227,7 +229,7 @@
     
     if (self = [super init]) {
         _maxRecordingTime = 10.0;
-        _autoSaveVideo = YES;
+        _autoSaveVideo = NO;
     }
     return self;
 }
@@ -266,9 +268,10 @@
     if (!_isRecording) {
         return;
     }
-    _isRecording = NO;
     
-    NSURL *videoFileURL = [NSURL fileURLWithPath:_recordingWriter.videoPath];
+    _isRecording = NO;
+    _videoFileURL = [NSURL fileURLWithPath:_recordingWriter.videoPath];
+    
     dispatch_async(self.captureQueue, ^{
         __weak typeof(self) weakSelf = self;
         [_recordingWriter finishWritingWithCompletionHandler:^{
@@ -284,15 +287,7 @@
             });
             
             if (weakSelf.autoSaveVideo) {
-                [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                    [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:videoFileURL];
-                } completionHandler:^(BOOL success, NSError * _Nullable error) {
-                    if (!error) {
-                        NSLog(@"save video success!");
-                    } else {
-                        NSLog(@"save video failure!");
-                    }
-                }];
+                [self saveCurrentRecordingVideo];
             }
             
             if (handler) {
@@ -308,7 +303,6 @@
                                                          if (result != AVAssetImageGeneratorSucceeded) {
                                                              return;
                                                          }
-                                                         
                                                          UIImage *firstFrameImage = [UIImage imageWithCGImage:image];
                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                              if (firstFrameImage) {
@@ -406,6 +400,30 @@
         
         [backCameraDevice unlockForConfiguration];
     }
+}
+
+- (void)saveCurrentRecordingVideo {
+    
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            [self saveCurrentRecordingVideoToPhotoLibrary];
+        }];
+    } else {
+        [self saveCurrentRecordingVideoToPhotoLibrary];
+    }
+}
+
+- (void)saveCurrentRecordingVideoToPhotoLibrary {
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:_videoFileURL];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if (!error) {
+            NSLog(@"Save video success!");
+        } else {
+            NSLog(@"Save video failure!");
+        }
+    }];
 }
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
