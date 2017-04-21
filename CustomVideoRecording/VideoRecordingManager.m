@@ -23,17 +23,17 @@
     Float64 _sampleRate;
 }
 
-@property (nonatomic, strong) AVCaptureSession           *captureSession;
+@property (nonatomic, strong) AVCaptureSession *captureSession;
 
-@property (nonatomic, strong) AVCaptureDeviceInput       *backCameraInput;
-@property (nonatomic, strong) AVCaptureDeviceInput       *frontCameraInput;
-@property (nonatomic, strong) AVCaptureDeviceInput       *audioInput;
+@property (nonatomic, strong) AVCaptureDeviceInput *backCameraInput;
+@property (nonatomic, strong) AVCaptureDeviceInput *frontCameraInput;
+@property (nonatomic, strong) AVCaptureDeviceInput *audioInput;
 
-@property (nonatomic, strong) AVCaptureVideoDataOutput   *videoOutput;
-@property (nonatomic, strong) AVCaptureAudioDataOutput   *audioOutput;
+@property (nonatomic, strong) AVCaptureVideoDataOutput *videoOutput;
+@property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;
 
-@property (nonatomic, strong) AVCaptureConnection        *videoConnection;
-@property (nonatomic, strong) AVCaptureConnection        *audioConnection;
+@property (nonatomic, strong) AVCaptureConnection *videoConnection;
+@property (nonatomic, strong) AVCaptureConnection *audioConnection;
 
 @property (nonatomic, strong) dispatch_queue_t captureQueue;
 

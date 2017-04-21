@@ -22,10 +22,10 @@
 
 - (void)dealloc {
     
-    _assetWriter      = nil;
-    _assetVideoInput  = nil;
-    _assetAudioInput  = nil;
-    _videoPath        = nil;
+    _assetWriter     = nil;
+    _assetVideoInput = nil;
+    _assetAudioInput = nil;
+    _videoPath       = nil;
 }
 
 + (instancetype)recordingWriterWithVideoPath:(NSString*)videoPath

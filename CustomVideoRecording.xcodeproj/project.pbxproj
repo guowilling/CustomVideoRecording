@@ -108,6 +108,9 @@
 		681F83511E2F600100B13369 /* CustomVideoRecording */ = {
 			isa = PBXGroup;
 			children = (
+				681F83531E2F600100B13369 /* main.m */,
+				681F83551E2F600100B13369 /* AppDelegate.h */,
+				681F83561E2F600100B13369 /* AppDelegate.m */,
 				681F83851E2F604200B13369 /* VideoRecordingController.h */,
 				681F83861E2F604200B13369 /* VideoRecordingController.m */,
 				681F83881E2F606600B13369 /* VideoRecordingManager.h */,
@@ -124,9 +127,6 @@
 		681F83521E2F600100B13369 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				681F83531E2F600100B13369 /* main.m */,
-				681F83551E2F600100B13369 /* AppDelegate.h */,
-				681F83561E2F600100B13369 /* AppDelegate.m */,
 				681F835E1E2F600100B13369 /* Assets.xcassets */,
 				681F83601E2F600100B13369 /* LaunchScreen.storyboard */,
 				681F83631E2F600100B13369 /* Info.plist */,

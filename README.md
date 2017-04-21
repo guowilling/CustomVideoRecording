@@ -1,18 +1,13 @@
 # CustomVideoRecording
 
-**To learn AVFoundation i code this video recording demo.**   
-**The following classes are used:**
+**Custom video recording based on AVFoundation.**   
 
-* AVCaptureVideoPreviewLayer
+**Following classes are used:**
+
 * AVCaptureSession
 * AVCaptureDeviceInput
 * AVCaptureVideoDataOutput
 * AVCaptureConnection
-* AVAssetWriterInput
 * AVAssetWriter
-
-## Show Pictures
-
-![image](./show1.jpg) ![image](./show2.jpg)
-***
-![image](./show3.jpg) ![image](./show4.jpg)
+* AVAssetWriterInput
+* AVCaptureVideoPreviewLayer

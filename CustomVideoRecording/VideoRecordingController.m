@@ -10,10 +10,7 @@
 #import "VideoRecordingManager.h"
 #import "VideoRecordingWriter.h"
 #import "VideoRecordingProgress.h"
-#import <AVFoundation/AVFoundation.h>
-#import <MediaPlayer/MediaPlayer.h>
 #import <AVKit/AVKit.h>
-#import <Photos/Photos.h>
 
 @interface VideoRecordingController () <VideoRecordingManagerDelegate>
 
@@ -76,7 +73,7 @@
     [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
-#pragma mark - Init UI
+#pragma mark - Setup UI
 
 - (void)setupTopToolBar {
     

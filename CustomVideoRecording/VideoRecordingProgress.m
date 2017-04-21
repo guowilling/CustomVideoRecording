@@ -78,28 +78,28 @@
     
     _progress = progress;
     
-    if (progress > 0) {
-        self.shapeLayer.lineWidth = 3;
-        self.shapeLayer.path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds))
-                                                              radius:self.bounds.size.width/2 - 2
-                                                          startAngle:3*M_PI_2
-                                                            endAngle:3*M_PI_2 + 2*M_PI
-                                                           clockwise:YES].CGPath;
-        if (animated) {
-            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-            animation.fromValue = [self.shapeLayer animationForKey:@"indeterminateAnimation"] ? @0 : nil;
-            animation.toValue = [NSNumber numberWithFloat:progress];
-            animation.duration = 1;
-            self.shapeLayer.strokeEnd = progress;
-            [self.shapeLayer addAnimation:animation forKey:@"strokeEndAnimation"];
-        } else {
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            self.shapeLayer.strokeEnd = progress;
-            [CATransaction commit];
-        }
-    } else {
+    if (progress <= 0) {
         [self.shapeLayer removeAnimationForKey:@"strokeEndAnimation"];
+        return;
+    }
+    self.shapeLayer.lineWidth = 3;
+    self.shapeLayer.path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds))
+                                                          radius:self.bounds.size.width / 2 - 2
+                                                      startAngle:3 * M_PI_2
+                                                        endAngle:3 * M_PI_2 + 2 * M_PI
+                                                       clockwise:YES].CGPath;
+    if (animated) {
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+        animation.fromValue = [self.shapeLayer animationForKey:@"indeterminateAnimation"] ? @0 : nil;
+        animation.toValue = [NSNumber numberWithFloat:progress];
+        animation.duration = 1;
+        self.shapeLayer.strokeEnd = progress;
+        [self.shapeLayer addAnimation:animation forKey:@"strokeEndAnimation"];
+    } else {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        self.shapeLayer.strokeEnd = progress;
+        [CATransaction commit];
     }
 }
 
