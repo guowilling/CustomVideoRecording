@@ -1,8 +1,6 @@
 # CustomVideoRecording
 
-**Custom video recording based on AVFoundation.**   
-
-**Following classes are used:**
+Custom video recording based on AVFoundation, the following classes are used:
 
 * AVCaptureSession
 * AVCaptureDeviceInput
