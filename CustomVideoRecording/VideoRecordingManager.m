@@ -209,8 +209,9 @@
 
 - (AVCaptureConnection *)videoConnection {
     
+    // Notice: Should not use lazy load, cos switch camera input device will have bug!
+    _videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
     if (!_videoConnection) {
-        _videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
     }
     return _videoConnection;
 }
@@ -322,7 +323,7 @@
 - (void)switchCameraAnimation {
     
     CATransition *filpAnimation = [CATransition animation];
-    //changeAnimation.delegate = self;
+    filpAnimation.delegate = self;
     filpAnimation.duration = 0.5;
     filpAnimation.type = @"oglFlip";
     filpAnimation.subtype = kCATransitionFromRight;
@@ -330,18 +331,21 @@
     [self.previewLayer addAnimation:filpAnimation forKey:@"filpAnimation"];
 }
 
-- (void)switchCameraInputDeviceToFront {
+- (void)animationDidStart:(CAAnimation *)anim {
     
+    self.videoConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
+    
+    [self.captureSession startRunning];
+}
+
+- (void)switchCameraInputDeviceToFront {
+
     [self.captureSession stopRunning];
     [self.captureSession removeInput:self.backCameraInput];
     
     if ([self.captureSession canAddInput:self.frontCameraInput]) {
         [self.captureSession addInput:self.frontCameraInput];
-        [self.captureSession startRunning];
-        
         [self switchCameraAnimation];
-        
-        self.videoConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
     }
 }
 
@@ -352,11 +356,7 @@
     
     if ([self.captureSession canAddInput:self.backCameraInput]) {
         [self.captureSession addInput:self.backCameraInput];
-        [self.captureSession startRunning];
-        
         [self switchCameraAnimation];
-        
-        self.videoConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
     }
 }
 

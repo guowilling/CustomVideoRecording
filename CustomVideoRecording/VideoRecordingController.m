@@ -16,6 +16,8 @@
 
 @property (nonatomic, strong) VideoRecordingManager *recordingManager;
 
+@property (nonatomic, weak) VideoRecordingProgress *recordingProgress;
+
 @property (nonatomic, weak) UIView   *topToolBar;
 @property (nonatomic, weak) UIButton *flashBtn;
 @property (nonatomic, weak) UIButton *switchCameraBtn;
@@ -24,8 +26,6 @@
 @property (nonatomic, weak) UIButton *startRecordingBtn;
 @property (nonatomic, weak) UIButton *playVideoBtn;
 @property (nonatomic, weak) UIButton *saveVideoBtn;
-
-@property (nonatomic, weak) VideoRecordingProgress *recordingProgress;
 
 @end
 
@@ -201,8 +201,8 @@
 
 - (void)stopRecording {
     
-    _startRecordingBtn.hidden = NO;
     _recordingProgress.hidden = YES;
+    _startRecordingBtn.hidden = NO;
     _playVideoBtn.hidden = NO;
     _saveVideoBtn.hidden = NO;
     
