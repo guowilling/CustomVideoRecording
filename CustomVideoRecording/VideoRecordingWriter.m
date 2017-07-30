@@ -80,7 +80,7 @@
 
 - (BOOL)writeWithSampleBuffer:(CMSampleBufferRef)sampleBuffer isVideo:(BOOL)isVideo {
     
-    BOOL isSuccess;
+    BOOL isSuccess = NO;
     if (CMSampleBufferDataIsReady(sampleBuffer)) {
         if (_assetWriter.status == AVAssetWriterStatusUnknown && isVideo) { // 保证首先写入的是视频.
             [_assetWriter startWriting];
