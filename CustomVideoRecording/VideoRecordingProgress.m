@@ -2,7 +2,7 @@
 //  VideoRecordingProgress.m
 //  CustomVideoRecording
 //
-//  Created by 郭伟林 on 17/1/18.
+//  Created by https://github.com/guowilling on 17/1/18.
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
@@ -19,7 +19,6 @@
 @implementation RecordingProgressViewBackgroundLayer
 
 - (id)init {
-    
     if (self = [super init]) {
         self.contentsScale = [UIScreen mainScreen].scale;
     }
@@ -27,14 +26,12 @@
 }
 
 - (void)setTintColor:(UIColor *)tintColor {
-    
     _tintColor = tintColor;
     
     [self setNeedsDisplay];
 }
 
 - (void)drawInContext:(CGContextRef)ctx {
-    
     CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
     CGFloat WH = self.bounds.size.width * 0.3;
     CGContextFillRect(ctx, CGRectMake(CGRectGetMidX(self.bounds) - WH * 0.5, CGRectGetMidY(self.bounds) - WH * 0.5, WH, WH));
@@ -56,7 +53,6 @@
 @implementation VideoRecordingProgress
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    
     if (self = [super initWithFrame:frame]) {
         _progressTintColor = [UIColor blackColor];
         
@@ -75,7 +71,6 @@
 }
 
 - (void)setProgress:(float)progress animated:(BOOL)animated {
-    
     _progress = progress;
     
     if (progress <= 0) {
@@ -104,12 +99,10 @@
 }
 
 - (void)setProgress:(float)progress {
-    
     [self setProgress:progress animated:NO];
 }
 
 - (void)setProgressTintColor:(UIColor *)progressTintColor {
-    
     _progressTintColor = progressTintColor;
     
     _backgroundLayer.tintColor = progressTintColor;

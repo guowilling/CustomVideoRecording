@@ -2,7 +2,7 @@
 //  VideoRecordingController.m
 //  CustomVideoRecording
 //
-//  Created by 郭伟林 on 17/1/18.
+//  Created by https://github.com/guowilling on 17/1/18.
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
@@ -31,10 +31,7 @@
 
 @implementation VideoRecordingController
 
-#pragma mark - Lazy Load
-
 - (VideoRecordingManager *)recordingManager {
-    
     if (!_recordingManager) {
         _recordingManager = [[VideoRecordingManager alloc] init];
         _recordingManager.maxRecordingTime = 15.0;
@@ -43,10 +40,7 @@
     return _recordingManager;
 }
 
-#pragma mark - Life Cycle
-
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor blackColor];
@@ -60,14 +54,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
     [super viewWillAppear:animated];
     
     [UIApplication sharedApplication].statusBarHidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    
     [super viewWillDisappear:animated];
     
     [UIApplication sharedApplication].statusBarHidden = NO;
@@ -76,7 +68,6 @@
 #pragma mark - Setup UI
 
 - (void)setupTopToolBar {
-    
     UIView *topToolBar = [[UIView alloc] init];
     topToolBar.frame = CGRectMake(0, 0, self.view.frame.size.width, 64);
     topToolBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
@@ -103,7 +94,6 @@
 }
 
 - (void)setupBottomToolBar {
-    
     UIView *bottomToolBar = [[UIView alloc] init];
     bottomToolBar.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 150);
     bottomToolBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
@@ -147,11 +137,9 @@
 #pragma mark - Actions
 
 - (void)flashBtnAction:(UIButton *)sender {
-    
     if (_switchCameraBtn.selected) {
         return;
     }
-    
     sender.selected = !sender.selected;
     if (sender.selected) {
         [self.recordingManager openFlashLight];
@@ -161,7 +149,6 @@
 }
 
 - (void)switchCameraBtnAction:(UIButton *)sender {
-    
     sender.selected = !sender.selected;
     if (sender.selected) {
         _flashBtn.selected = NO;
@@ -173,7 +160,6 @@
 }
 
 - (void)startRecordingBtnAction:(UIButton *)sender {
-    
     sender.hidden = YES;
     _playVideoBtn.hidden = YES;
     _saveVideoBtn.hidden = YES;
@@ -188,19 +174,16 @@
 }
 
 - (void)playVideoBtnAction {
-    
     AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
     playerViewController.player = [AVPlayer playerWithURL:[NSURL fileURLWithPath:self.recordingManager.videoPath]];
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
 - (void)saveVideoBtnBtnAction {
-    
     [self.recordingManager saveCurrentRecordingVideo];
 }
 
 - (void)stopRecording {
-    
     _recordingProgress.hidden = YES;
     _startRecordingBtn.hidden = NO;
     _playVideoBtn.hidden = NO;
@@ -219,7 +202,6 @@
 #pragma mark - SRRecordingManagerDelegate
 
 - (void)updateRecordingProgress:(CGFloat)progress {
-    
     _recordingProgress.progress = progress;
     
     if (progress >= 1.0) {

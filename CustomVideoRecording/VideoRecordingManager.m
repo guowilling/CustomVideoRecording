@@ -2,7 +2,7 @@
 //  VideoRecordingManager.m
 //  CustomVideoRecording
 //
-//  Created by 郭伟林 on 17/1/18.
+//  Created by https://github.com/guowilling on 17/1/18.
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
@@ -40,7 +40,6 @@
 @property (nonatomic, strong) VideoRecordingWriter *recordingWriter;
 
 @property (nonatomic, assign) CMTime  startRecordingCMTime;
-
 @property (nonatomic, assign) CGFloat currentRecordingTime;
 
 @property (nonatomic, assign) BOOL isRecording;
@@ -54,7 +53,6 @@
 @implementation VideoRecordingManager
 
 - (void)dealloc {
-    
     [_captureSession stopRunning];
     
     _captureSession   = nil;
@@ -70,7 +68,6 @@
 }
 
 + (void)load {
-    
     NSString *cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
                                 stringByAppendingPathComponent:NSStringFromClass([self class])];
     BOOL isDirectory = NO;
@@ -83,7 +80,6 @@
 #pragma mark - Lazy Load
 
 - (NSString *)cacheDirectoryPath {
-    
     if (!_cacheDirectoryPath) {
         _cacheDirectoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
                                stringByAppendingPathComponent:NSStringFromClass([self class])];
@@ -92,7 +88,6 @@
 }
 
 - (AVCaptureVideoPreviewLayer *)previewLayer {
-    
     if (!_previewLayer) {
         _previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.captureSession];
         _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
@@ -101,7 +96,6 @@
 }
 
 - (AVCaptureSession *)captureSession {
-    
     if (!_captureSession) {
         _captureSession = [[AVCaptureSession alloc] init];
         
@@ -111,7 +105,6 @@
         if ([_captureSession canAddInput:self.audioInput]) {
             [_captureSession addInput:self.audioInput];
         }
-        
         if ([_captureSession canAddOutput:self.videoOutput]) {
             [_captureSession addOutput:self.videoOutput];
         }
@@ -128,7 +121,6 @@
 }
 
 - (AVCaptureDeviceInput *)backCameraInput {
-    
     if (!_backCameraInput) {
         AVCaptureDevice *backCameraDevice = nil;
         NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
@@ -148,7 +140,6 @@
 }
 
 - (AVCaptureDeviceInput *)frontCameraInput {
-    
     if (!_frontCameraInput) {
         AVCaptureDevice *frontCameraDevice = nil;
         NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
@@ -168,7 +159,6 @@
 }
 
 - (AVCaptureDeviceInput *)audioInput {
-    
     if (!_audioInput) {
         AVCaptureDevice *captureDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
         NSError *error = nil;
@@ -181,7 +171,6 @@
 }
 
 - (AVCaptureVideoDataOutput *)videoOutput {
-    
     if (!_videoOutput) {
         _videoOutput = [[AVCaptureVideoDataOutput alloc] init];
         [_videoOutput setSampleBufferDelegate:self queue:self.captureQueue];
@@ -191,7 +180,6 @@
 }
 
 - (AVCaptureAudioDataOutput *)audioOutput {
-    
     if (!_audioOutput) {
         _audioOutput = [[AVCaptureAudioDataOutput alloc] init];
         [_audioOutput setSampleBufferDelegate:self queue:self.captureQueue];
@@ -200,7 +188,6 @@
 }
 
 - (dispatch_queue_t)captureQueue {
-    
     if (!_captureQueue) {
         _captureQueue = dispatch_queue_create("com.willing.SRVideoRecorder", DISPATCH_QUEUE_SERIAL);
     }
@@ -208,8 +195,7 @@
 }
 
 - (AVCaptureConnection *)videoConnection {
-    
-    // Notice: Should not use lazy load, cos switch camera input device will have bug!
+    // 不要使用懒加载, 不然切换前后置摄像头时会有 bug
     _videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
     if (!_videoConnection) {
     }
@@ -217,7 +203,6 @@
 }
 
 - (AVCaptureConnection *)audioConnection {
-    
     if (!_audioConnection) {
         _audioConnection = [self.audioOutput connectionWithMediaType:AVMediaTypeAudio];
     }
@@ -227,7 +212,6 @@
 #pragma mark - Init
 
 - (instancetype)init {
-    
     if (self = [super init]) {
         _maxRecordingTime = 10.0;
         _autoSaveVideo = NO;
@@ -238,7 +222,6 @@
 #pragma mark - Public Methods
 
 - (void)startCapture {
-    
     _isRecording = NO;
     _startRecordingCMTime = CMTimeMake(0, 0);
     _currentRecordingTime = 0;
@@ -247,12 +230,10 @@
 }
 
 - (void)stopCapture {
-    
     [self.captureSession stopRunning];
 }
 
 - (void)startRecoring {
-    
     if (self.isRecording) {
         return;
     }
@@ -260,16 +241,13 @@
 }
 
 - (void)stopRecoring {
-    
     [self stopRecordingHandler:nil];
 }
 
 - (void)stopRecordingHandler:(void (^)(UIImage *firstFrameImage))handler {
-    
     if (!_isRecording) {
         return;
     }
-    
     _isRecording = NO;
     _videoFileURL = [NSURL fileURLWithPath:_recordingWriter.videoPath];
     
@@ -321,7 +299,6 @@
 #pragma mark - Public Methods
 
 - (void)switchCameraAnimation {
-    
     CATransition *filpAnimation = [CATransition animation];
     filpAnimation.delegate = self;
     filpAnimation.duration = 0.5;
@@ -332,14 +309,12 @@
 }
 
 - (void)animationDidStart:(CAAnimation *)anim {
-    
     self.videoConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
     
     [self.captureSession startRunning];
 }
 
 - (void)switchCameraInputDeviceToFront {
-
     [self.captureSession stopRunning];
     [self.captureSession removeInput:self.backCameraInput];
     
@@ -350,7 +325,6 @@
 }
 
 - (void)swithCameraInputDeviceToBack {
-    
     [self.captureSession stopRunning];
     [self.captureSession removeInput:self.frontCameraInput];
     
@@ -361,7 +335,6 @@
 }
 
 - (void)openFlashLight {
-    
     AVCaptureDevice *backCameraDevice;
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in devices) {
@@ -373,16 +346,13 @@
     
     if (backCameraDevice.torchMode == AVCaptureTorchModeOff) {
         [backCameraDevice lockForConfiguration:nil];
-        
         backCameraDevice.torchMode = AVCaptureTorchModeOn;
         backCameraDevice.flashMode = AVCaptureFlashModeOn;
-        
         [backCameraDevice unlockForConfiguration];
     }
 }
 
 - (void)closeFlashLight {
-    
     AVCaptureDevice *backCameraDevice;
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in devices) {
@@ -394,16 +364,13 @@
     
     if (backCameraDevice.torchMode == AVCaptureTorchModeOn) {
         [backCameraDevice lockForConfiguration:nil];
-        
         backCameraDevice.torchMode = AVCaptureTorchModeOff;
-        backCameraDevice.flashMode = AVCaptureTorchModeOff;
-        
+        backCameraDevice.flashMode = AVCaptureFlashModeOff;
         [backCameraDevice unlockForConfiguration];
     }
 }
 
 - (void)saveCurrentRecordingVideo {
-    
     if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
             [self saveCurrentRecordingVideoToPhotoLibrary];
@@ -414,7 +381,6 @@
 }
 
 - (void)saveCurrentRecordingVideoToPhotoLibrary {
-    
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
         [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:_videoFileURL];
     } completionHandler:^(BOOL success, NSError * _Nullable error) {
@@ -429,13 +395,11 @@
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-    
-    BOOL isVideo = YES;
-    
     if (!_isRecording) {
         return;
     }
     
+    BOOL isVideo = YES;
     if (captureOutput != self.videoOutput) {
         isVideo = NO;
     }

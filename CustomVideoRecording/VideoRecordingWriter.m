@@ -2,7 +2,7 @@
 //  VideoRecordingWriter.m
 //  CustomVideoRecording
 //
-//  Created by 郭伟林 on 17/1/18.
+//  Created by https://github.com/guowilling on 17/1/18.
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
@@ -21,7 +21,6 @@
 @implementation VideoRecordingWriter
 
 - (void)dealloc {
-    
     _assetWriter     = nil;
     _assetVideoInput = nil;
     _assetAudioInput = nil;
@@ -34,7 +33,11 @@
                                 audioChannel:(int)channel
                                   sampleRate:(Float64)rate
 {
-    return [[self alloc] initWithVideoPath:videoPath resolutionWidth:width resolutionHeight:height audioChannel:channel sampleRate:rate];
+    return [[self alloc] initWithVideoPath:videoPath
+                           resolutionWidth:width
+                          resolutionHeight:height
+                              audioChannel:channel
+                                sampleRate:rate];
 }
 
 - (instancetype)initWithVideoPath:(NSString*)videoPath
@@ -46,26 +49,26 @@
     self = [super init];
     if (self) {
         _videoPath = videoPath;
-        // 删除此路径下的文件如果已经存在, 保证文件是最新录制.
+        // 删除此路径下的文件如果已经存在, 保证文件是最新录制的
         [[NSFileManager defaultManager] removeItemAtPath:self.videoPath error:nil];
-        // 初始化 AVAssetWriter, 写入媒体类型为 MP4.
+        // 初始化 AVAssetWriter, 写入媒体类型为 MP4
         _assetWriter = [AVAssetWriter assetWriterWithURL:[NSURL fileURLWithPath:self.videoPath] fileType:AVFileTypeMPEG4 error:nil];
         _assetWriter.shouldOptimizeForNetworkUse = YES;
         
         {
-            // 初始化视频输入.
-            // 配置视频的分辨率, 编码方式等.
+            // 初始化视频输入
+            // 配置视频的分辨率, 编码方式等
             NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
                                       @(width), AVVideoWidthKey,
                                       @(height), AVVideoHeightKey, nil];
             _assetVideoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:settings];
-            _assetVideoInput.expectsMediaDataInRealTime = YES; // 调整输入应该处理实时数据源的数据.
+            _assetVideoInput.expectsMediaDataInRealTime = YES; // 调整输入应该处理实时数据源的数据
             [_assetWriter addInput:_assetVideoInput];
         }
         
         if (channel != 0 && rate != 0) {
-            // 初始化音频输入.
-            // 配置音频的AAC, 音频通道, 采样率, 比特率等.
+            // 初始化音频输入
+            // 配置音频的AAC, 音频通道, 采样率, 比特率等
             NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:@(kAudioFormatMPEG4AAC), AVFormatIDKey,
                                       @(channel), AVNumberOfChannelsKey,
                                       @(rate), AVSampleRateKey,
@@ -79,10 +82,9 @@
 }
 
 - (BOOL)writeWithSampleBuffer:(CMSampleBufferRef)sampleBuffer isVideo:(BOOL)isVideo {
-    
     BOOL isSuccess = NO;
     if (CMSampleBufferDataIsReady(sampleBuffer)) {
-        if (_assetWriter.status == AVAssetWriterStatusUnknown && isVideo) { // 保证首先写入的是视频.
+        if (_assetWriter.status == AVAssetWriterStatusUnknown && isVideo) { // 保证首先写入的是视频
             [_assetWriter startWriting];
             [_assetWriter startSessionAtSourceTime:CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
         }
@@ -107,7 +109,6 @@
 }
 
 - (void)finishWritingWithCompletionHandler:(void (^)(void))handler {
-    
     [_assetWriter finishWritingWithCompletionHandler:handler];
 }
 

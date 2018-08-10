@@ -2,7 +2,7 @@
 //  VideoRecordingManager.h
 //  CustomVideoRecording
 //
-//  Created by 郭伟林 on 17/1/18.
+//  Created by https://github.com/guowilling on 17/1/18.
 //  Copyright © 2017年 SR. All rights reserved.
 //
 
